@@ -1,0 +1,12 @@
+{
+  "presets": [
+    // "@babel/preset-env",
+    //configuracion para el Pollifyll carga inteligente.
+    ["@babel/preset-env", {
+			"useBuiltIns": "usage",
+			"debug":true
+		}],
+    "@babel/preset-react"
+  ],
+  "plugins": [["import", { "libraryName": "antd","style": true }]]
+}
