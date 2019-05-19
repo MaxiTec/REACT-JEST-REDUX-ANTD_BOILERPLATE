@@ -1,6 +1,8 @@
 import {API_URL} from '../conf/configuration';
 import Axios from 'axios';
 import history from '../store/history'
+import store from '../store/store'
+import {userActions} from '../actions/user-actions'
 // import { authHeader } from '../_helpers';
 // import {history} from '../store/history'
 export const userService = {
@@ -74,12 +76,10 @@ function update(user) {
 function handleResponse(error) {
     console.log(error.response.status)
     if (error.response) {
-        if (error.response.status === 400) {
-            console.log('LLLEGOO')
-            logout();
+        if (error.response.status === 401) {
+            store.dispatch(userActions.logout())
             history.push('/')
         }
-        // throw new Error(error.response.data.toString());
         return Promise.reject(error.response.data);
     } else if (error.request) {
         return Promise.reject(error.request);
