@@ -1,4 +1,6 @@
 import {API_URL} from '../conf/configuration';
+import Axios from 'axios';
+import history from '../store/history'
 // import { authHeader } from '../_helpers';
 // import {history} from '../store/history'
 export const userService = {
@@ -18,21 +20,18 @@ function login(username, password) {
         body: JSON.stringify({ email:username, password })
     };
     //cambiar todos a Axios
-    return fetch(`${API_URL}login`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            // history.push('/')
-            //esto ya lo hace Redux PersisT
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            // localStorage.setItem('user', JSON.stringify(user));
-            return user;
-        });
-        
+    return Axios.post(`${API_URL}login`,{ email:username, password }).then(function (response) {
+        return response
+      })
+      .catch(function (error) {
+        return handleResponse(error)
+      });
 }
 
 function logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('user');
+    console.log('me deslogueo')
+    localStorage.removeItem('persist:login');
 }
 
 function getAll() {
@@ -72,18 +71,19 @@ function update(user) {
 
     return fetch(`${apiUrl}/users/${user.id}`, requestOptions).then(handleResponse);;
 }
-function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                // Hacer Logout si la peticion es un 401
-                logout();
-                location.reload(true);
-            }
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
+function handleResponse(error) {
+    console.log(error.response.status)
+    if (error.response) {
+        if (error.response.status === 400) {
+            console.log('LLLEGOO')
+            logout();
+            history.push('/')
         }
-        return data;
-    });
+        // throw new Error(error.response.data.toString());
+        return Promise.reject(error.response.data);
+    } else if (error.request) {
+        return Promise.reject(error.request);
+    } else {
+        console.log('Error', error.message);
+    }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link ,withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { Button } from 'antd';
 // import { userActions } from '../_actions';
 
 class HomePage extends React.Component {
@@ -19,6 +19,12 @@ class HomePage extends React.Component {
         return (
             <div>
                 HOME PAGE,WELCOME {user.nombre}
+                <Link to="/otro-lugar">LINK</Link>
+                <Button type="primary">Primary</Button>
+                <Button>Default</Button>
+                <Button type="dashed">Dashed</Button>
+                <Button type="danger">Danger</Button>
+                <Button type="link">Link</Button>
             </div>
         );
     }
@@ -26,7 +32,6 @@ class HomePage extends React.Component {
 
 function mapStateToProps(state) {
     const { login } = state;
-    // const { users, login } = state;
     const { user } = login;
     return {
         user

@@ -1,3 +1,4 @@
+// Depedencias para montar Componenetes de React
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 

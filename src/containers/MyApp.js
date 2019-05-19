@@ -14,16 +14,16 @@ class App extends React.Component {
         super(props);
         console.log(props)
         // console.log(history)
-        const { dispatch } = this.props;
+        // const { dispatch } = this.props;
         //escuchamos siempre en cada cambio de pagina, y limpiamos las alertas.
-        this.props.history.listen((location, action) => {
-            console.log(location,action)
-            dispatch(alertActions.clear());
-        });
+        // this.props.history.listen((location, action) => {
+        //     console.log(location,action)
+        //     dispatch(alertActions.clear());
+        // });
     }
 
     render() {
-        const { alert } = this.props;
+        const { alert,login } = this.props;
         return (
             <div className="jumbotron">
                 <div className="container">
@@ -38,11 +38,9 @@ class App extends React.Component {
                           />
                         }
                         <Switch>
-                            <div>
-                                <PrivateRoute exact path="/" component={HomePage} />
-                                <Route path="/login" component={LoginPage} />
-                                {/* <Route path="/register" component={RegisterPage} /> */}
-                            </div>
+                            <PrivateRoute exact path="/" component={HomePage} auth={login} />
+                            <Route path="/login" component={LoginPage} auth={login}/>
+                            {/* <Route path="/register" component={RegisterPage} /> */}
                         </Switch>
                     </div>
                 </div>
@@ -52,6 +50,7 @@ class App extends React.Component {
 }
 const mapStateToProps = state => {
     const {elements, message, login, alert} =state
+    // const { loggedIn,user } = login;
     return({elements,message,login,alert});}
 const connectedApp =  withRouter(connect(mapStateToProps)(App))
 // export default withRouter(connect(mapStateToProps)(App))

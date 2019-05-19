@@ -12,7 +12,6 @@ export const userActions = {
 };
 
 function login(username, password) {
-    // console.log(history2)
     return dispatch => {
         dispatch(request({ username }));
         userService.login(username, password)
@@ -21,17 +20,16 @@ function login(username, password) {
                     dispatch(success(user));
                     history.push('/');
                     dispatch(alertActions.success('Login Success'));
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
                 }
-            );
+            ).catch(error=>{
+                dispatch(failure(JSON.stringify(error)));
+                dispatch(alertActions.error(JSON.stringify(error)));
+            })
+           
     };
-
     function request(user) { return { type: loginTypes.LOGIN_REQUEST, user } }
     function success(user) { return { type: loginTypes.LOGIN_SUCCESS, user } }
-    function failure(error) { return { type: loginTypes.LOGIN_FAILURE, error } }
+    function failure(error) { return { type: loginTypes.LOGIN_ERROR, error } }
 }
 
 function logout() {

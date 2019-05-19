@@ -76,11 +76,6 @@ function mapStateToProps(state) {
         loggingIn
     };
 }
-function mapDispatchToProps(dispatch, ownProps) {
-    return {
-        save: (data) => dispatch(userActions.login(ownProps.history,username, password))
-    }
-}
 const connectedLoginPage = withRouter(connect(mapStateToProps)(LoginPage))
 // const connectedApp =  withRouter(connect(mapStateToProps)(LoginPage))
 export { connectedLoginPage as LoginPage }; 
