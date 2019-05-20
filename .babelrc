@@ -1,9 +1,7 @@
 {
   "presets": [
-    // "@babel/preset-env",
-    //configuracion para el Pollifyll carga inteligente.
     ["@babel/preset-env", {
-			"useBuiltIns": "usage",
+			"useBuiltIns": "usage",//polyfill Dinámico
 			"debug":true
 		}],
     "@babel/preset-react"

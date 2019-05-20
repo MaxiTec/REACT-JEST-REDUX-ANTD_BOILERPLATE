@@ -7,12 +7,8 @@ const propTypes = {
 };
 
 const Message = ({ message, handleUpdateMessage }) => (
-  <h1
-    onClick={() => handleUpdateMessage()}
-    role="presentation"
-    onKeyDown={() => {}}
-  >
-    { message }
+  <h1 onClick={() => handleUpdateMessage()} role="presentation" onKeyDown={() => {}}>
+    {message}
   </h1>
 );
 

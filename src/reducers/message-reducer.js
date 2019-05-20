@@ -1,4 +1,5 @@
-import {actionTypes} from '../constants/actions-types';
+import { actionTypes } from '../constants/actions-types';
+
 const message = (state = 'Hello World!', action) => {
   switch (action.type) {
     case actionTypes.UPDATE_MESSAGE: {

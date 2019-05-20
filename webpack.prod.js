@@ -1,17 +1,32 @@
-const webpack = require('webpack')
+const webpack = require('webpack');
 const merge = require('webpack-merge');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const common = require('./webpack.common.js');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-console.log('production')
+
+console.log('production');
 module.exports = merge(common, {
-  plugins:[
-    //ignora la carpeta Locale de Moment
+  plugins: [
+    // Ignora la carpeta Locale de Moment
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new BundleAnalyzerPlugin()
+    new BundleAnalyzerPlugin(),
   ],
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    },
+    minimizer: [new UglifyJsPlugin()],
+  },
   // optimization: {
   //   minimizer: [
-  //     new UglifyJsPlugin({ 
+  //     new UglifyJsPlugin({
   //       compress: {
   //       warnings: false,
   //       screw_ie8: true,
