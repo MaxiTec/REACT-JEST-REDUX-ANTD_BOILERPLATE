@@ -5,30 +5,17 @@ import moment from 'moment';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as Yup from 'yup';
-import DisplayBookingForm from '../components/LoginForm/LoginForm';
-import './Login.styl';
-import { userActions } from '../actions/user-actions';
+import DisplayBookingForm from '../../components/LoginForm';
+import { userActions } from '../../actions/user-actions';
 
-const dateFormat = 'MM-DD-YYYY';
 const timeFormat = 'h:mm A';
 const initialValues = {
-  bookingClient: '',
-  bookingDate: moment(Date.now()),
-  bookingTime: moment(Date.now()),
-  selectOptions: ['Mark', 'Bob', 'Anthony'],
-  checkboxName: false,
+  username: '',
+  password: '',
 };
 const SignupSchema = Yup.object().shape({
-  email: Yup.string().required('Requerido'),
-  bookingClient: Yup.string().required('Requerido'),
-  bookingDate: Yup.date()
-    .required('Requerido')
-    .min(
-      moment(new Date())
-        .add(1, 'days')
-        .toDate(),
-      'La fecha debe ser a futuro',
-    ),
+  username: Yup.string().required('Requerido'),
+  password: Yup.string().required('Requerido'),
 });
 class LoginPage extends React.Component {
   constructor(props) {
@@ -38,18 +25,27 @@ class LoginPage extends React.Component {
     this.state = {
       username: '',
       password: '',
-      submitted: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(formProps, actions) {
     const {
-      bookingClient, bookingDate, bookingTime, email, checkboxName,
+      username, password
     } = formProps;
-    const selectedDate = moment(bookingDate).format(dateFormat);
-    const selectedTime = moment(bookingTime).format(timeFormat);
-    console.log(bookingClient, email, selectedDate, selectedTime, checkboxName);
+    console.log( username, password);
+    const { dispatch } = this.props;
+    dispatch(userActions.login(username, password))
+      .then((ele) => {
+        console.log('Paso el Login');
+      })
+      .catch((ele) => {
+        this.props.form.setFields({
+          username: {
+            errors: [new Error('forbid ha')],
+          },
+        });
+      });
   }
   // handleSubmit(e) {
   //   console.log(e);
@@ -76,7 +72,6 @@ class LoginPage extends React.Component {
   //     }
   //   });
   // }
-
   render() {
     const { loggingIn } = this.props;
     console.log(this.props);

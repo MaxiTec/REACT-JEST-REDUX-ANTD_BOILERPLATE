@@ -35,14 +35,25 @@ const CreateAntField = AntComponent => ({
         help={submittedError || touchedError ? hasError : false}
         validateStatus={submittedError || touchedError ? 'error' : 'success'}
       >
-        <AntComponent
-          {...field}
-          {...props}
-          onBlur={onBlur}
-          onChange={type ? onInputChange : onChange}
-        >
-          {selectOptions && selectOptions.map(name => <Option key={name}>{name}</Option>)}
-        </AntComponent>
+        {type == 'password' ? (
+          <AntComponent.Password
+            {...field}
+            {...props}
+            onBlur={onBlur}
+            onChange={type ? onInputChange : onChange}
+          >
+            {selectOptions && selectOptions.map(name => <Option key={name}>{name}</Option>)}
+          </AntComponent.Password>
+        ) : (
+          <AntComponent
+            {...field}
+            {...props}
+            onBlur={onBlur}
+            onChange={type ? onInputChange : onChange}
+          >
+            {selectOptions && selectOptions.map(name => <Option key={name}>{name}</Option>)}
+          </AntComponent>
+        )}
       </FormItem>
     </div>
   );
@@ -67,10 +78,8 @@ const CreateCheckBox = AntComponent => ({
   return (
     <div className="field-container">
       <FormItem
-        // label={label}
         hasFeedback={!!((hasFeedback && submitted) || (hasFeedback && touched))}
         help={submittedError || touchedError ? hasError : false}
-        // validateStatus={submittedError || touchedError ? 'error' : 'success'}
       >
         <AntComponent {...field} {...props} onChange={onInputChange} />
       </FormItem>

@@ -17,7 +17,8 @@ function login(username, password) {
     return userService
       .login(username, password)
       .then((user) => {
-        dispatch(success(user));
+        const { data } = user;
+        dispatch(success(data));
         history.push('/');
         dispatch(alertActions.success('Login Success'));
         return Promise.resolve();

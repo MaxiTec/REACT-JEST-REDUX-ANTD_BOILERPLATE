@@ -1,13 +1,17 @@
 import React from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import { Alert } from 'antd';
+import {
+  Switch, Route, withRouter, Link,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 // import { withRouter } from 'react-router-dom'
 // import { history } from '../store/store';
+import { Alert } from 'antd';
 import { alertActions } from '../actions/alert-actions';
 import { PrivateRoute } from '../components/privateRoute';
 import { HomePage } from './Home';
-import { LoginPage } from './Login';
+import { LoginPage } from './login';
+import { Test } from './Test';
+import CustomBreadCrumb from '../components/CustomBreadCrumb';
 // import { RegisterPage } from '../RegisterPage';
 class App extends React.Component {
   constructor(props) {
@@ -23,27 +27,28 @@ class App extends React.Component {
   }
 
   render() {
+    const { location } = this.props;
     const { alert, login } = this.props;
     return (
-      <div className="jumbotron">
-        <div className="container">
-          <div className="col-sm-8 col-sm-offset-2">
-            {alert.message && (
-              // <div className={`alert ${alert.type}`}>{alert.message}</div>
-              <Alert
-                message={alert.message}
-                type="warning"
-                closable
-                // onClose={onClose}
-              />
-            )}
-            <Switch>
-              <PrivateRoute exact path="/" component={HomePage} auth={login} />
-              <Route path="/login" component={LoginPage} auth={login} />
-              {/* <Route path="/register" component={RegisterPage} /> */}
-            </Switch>
-          </div>
-        </div>
+      <div className="container">
+        {alert.message && <Alert message={alert.message} type="warning" closable />}
+        <Switch>
+          <PrivateRoute exact path="/" breadcrumbName="Home" component={HomePage} auth={login} />
+          <Route
+            path="/login"
+            render={props => <LoginPage breadcrumbName="login" {...props} />}
+            auth={login}
+          />
+          <Route exact path="/test" breadcrumbName="test" component={Test} auth={login} />
+          <Route
+            exact
+            path="/test/:id"
+            breadcrumbName="otro"
+            component={() => <div>/test/otro</div>}
+            auth={login}
+          />
+          {/* <Route path="/register" component={RegisterPage} /> */}
+        </Switch>
       </div>
     );
   }
@@ -61,5 +66,4 @@ const mapStateToProps = (state) => {
   };
 };
 const connectedApp = withRouter(connect(mapStateToProps)(App));
-// export default withRouter(connect(mapStateToProps)(App))
 export { connectedApp as App };
