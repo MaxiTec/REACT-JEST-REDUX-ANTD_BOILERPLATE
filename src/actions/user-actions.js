@@ -41,7 +41,6 @@ function login(username, password) {
 }
 
 function logout() {
-  userService.logout();
   return { type: loginTypes.LOGOUT };
 }
 

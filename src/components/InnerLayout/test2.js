@@ -1,18 +1,19 @@
 // import React from 'react';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import {
-  Layout, Menu, Icon, Row, Col, PageHeader,
+  Layout, Menu, Icon, Dropdown, Row, Col, PageHeader,
 } from 'antd';
 import CustomBreadCrumb from '../CustomBreadCrumb';
 import css from './index.styl';
+import AppContext from '../AppContext';
 
 const { SubMenu } = Menu;
 const {
   Header, Content, Sider, Footer,
 } = Layout;
 class MainLayout extends Component {
-  constructor(props) {
+  constructor(props, context) {
     super(props);
     this.state = {
       collapsed: false,
@@ -20,6 +21,7 @@ class MainLayout extends Component {
     };
     this.toggle = this.toggle.bind(this);
     this.onOpenChange = this.onOpenChange.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   toggle() {
@@ -28,8 +30,24 @@ class MainLayout extends Component {
     });
   }
 
+  logout() {
+    this.context.signOut();
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateDimensions);
+  }
+
+  updateDimensions() {
+    this.setState({ width: window.innerWidth });
+  }
+
   componentWillMount() {
-    console.log('MONTADOOOO');
+    this.updateDimensions();
     const pathname = this.props.location.pathname.split('/');
     if (pathname != null) {
       this.setState({
@@ -46,32 +64,73 @@ class MainLayout extends Component {
   }
 
   render() {
-    console.log(this.props.location);
+    const { collapsed, width } = this.state;
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header className={`${css.header}`}>
-          {/* <div className={css.header__icon}>Logo</div> */}
-          <Icon
-            className="trigger"
-            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-            onClick={this.toggle}
-          />
+          <div className={css.header__icon}>Logo</div>
+          <div className={css.header__nav}>
+            <Row justify="space-between" style={{ width: '100%' }}>
+              <Col xs={12} lg={12}>
+                {/* <button onClick={this.toggle}> */}
+                <i className="icon icon-md icon-bars" onClick={this.toggle} />
+                {/* </button> */}
+              </Col>
+              <Col xs={12} lg={12} style={{ textAlign: 'right' }}>
+                <Dropdown
+                  overlay={() => (
+                    <Menu>
+                      <Menu.Item key="idioma">
+                        <button style={{ padding:0,background: 'none', border: '0px' }}>
+                          Cambiar Idioma
+                        </button>
+                      </Menu.Item>
+                      <Menu.Item key="password">
+                        <Link to="/change-password">Cambiar Contraseña</Link>
+                      </Menu.Item>
+                      <Menu.Divider />
+                      <Menu.Item key="salir">
+                        <button
+                          style={{ padding:0,background: 'none', border: '0px' }}
+                          onClick={() => this.logout()}
+                        >
+                          Salir
+                        </button>
+                      </Menu.Item>
+                    </Menu>
+                  )}
+                  trigger={['click']}
+                >
+                  <i className="icon icon-md icon-cog" />
+                </Dropdown>
+                {/* <Icon
+                  className="openMenu"
+                  type="menu-fold"
+                  // onClick={this.toggle}
+                /> */}
+              </Col>
+            </Row>
+          </div>
         </Header>
         <Layout>
           <Sider
             width={250}
-            style={{ background: '#fff' }}
+            style={{ background: '#fff', overflow: 'hidden' }}
             collapsible
             breakpoint="lg"
-            // collapsedWidth="0"
+            collapsedWidth={width <= 768 ? 0 : 80}
             theme="dark"
             trigger={null}
-            collapsed={this.state.collapsed}
+            collapsed={collapsed}
             onCollapse={(collapsed, type) => {
-              console.log(collapsed, type);
+              if (collapsed) {
+                this.setState({
+                  collapsed: true,
+                });
+              }
             }}
           >
-            {!this.state.collapsed && (
+            {!collapsed && (
               <React.Fragment>
                 <div className={css.sider__title}>
                   <span>Bienvenido: Sistemas</span>
@@ -88,7 +147,10 @@ class MainLayout extends Component {
               openKeys={this.state.openKeys}
               defaultOpenKeys={this.state.openKeys}
               onOpenChange={this.onOpenChange}
-              style={{ minHeight: 'calc(100% - 95px)', borderRight: 0 }}
+              style={{
+                minHeight: this.state.collapsed ? '100%' : 'calc(100% - 95px)',
+                borderRight: 0,
+              }}
               theme="dark"
             >
               <SubMenu
@@ -123,8 +185,8 @@ class MainLayout extends Component {
                 className={css.menu__submenu}
                 title={(
                   <span>
-                    <Icon type="user" />
-                    TEST
+                    <i className="icon icon--md icon-user-plus" />
+                    Test
                   </span>
 )}
               >
@@ -148,7 +210,7 @@ class MainLayout extends Component {
                 className={css.menu__submenu}
                 title={(
                   <span>
-                    <Icon type="laptop" />
+                    <i className="icon icon--md icon-home" />
                     Tours
                   </span>
 )}
@@ -162,13 +224,17 @@ class MainLayout extends Component {
             </Menu>
           </Sider>
           <Layout>
-            <PageHeader
-              className={css.sider__PageHeader}
-              title={this.props.title}
-              // subTitle="This is a subtitle"
-              tags={this.props.button ? <Link to={this.props.button}>Agregar</Link> : null}
-              extra={<CustomBreadCrumb location={this.props.location} />}
-            />
+            <AppContext.Consumer>
+              {context => (
+                <PageHeader
+                  className={css.sider__PageHeader}
+                  title={context.title}
+                  tags={context.button ? <Link to={this.props.button}>Agregar</Link> : null}
+                  extra={<CustomBreadCrumb location={this.props.location} />}
+                />
+              )}
+            </AppContext.Consumer>
+
             <Content
               style={{
                 background: '#fff',
@@ -181,13 +247,13 @@ class MainLayout extends Component {
             </Content>
             <Footer>
               <Row>
-                <Col xs={12} lg={18}>
+                <Col xs={24} lg={18}>
                   <div>
                     <strong>Copyrigth Viaje Caribe Maya.</strong>
                     All rigths reserved
                   </div>
                 </Col>
-                <Col xs={12} lg={6} style={{ textAlign: 'right' }}>
+                <Col xs={24} lg={6} style={{ textAlign: 'right' }}>
                   Versión 1.0
                 </Col>
               </Row>
@@ -198,5 +264,5 @@ class MainLayout extends Component {
     );
   }
 }
-
-export default MainLayout;
+MainLayout.contextType = AppContext;
+export default withRouter(MainLayout);

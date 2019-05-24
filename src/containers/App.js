@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import actionMessage from '../actions/message-actions';
 import Message from '../components/Message';
 import Elements from '../components/Elements';
-
 const propTypes = {
   message: PropTypes.string.isRequired,
   updateMessage: PropTypes.func.isRequired,

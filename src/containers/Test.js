@@ -1,21 +1,26 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import MainLayout from '../components/InnerLayout';
+import AppContext from '../components/AppContext';
 
 class Test extends React.Component {
+  constructor(props, context) {
+    super(props);
+  }
+
   componentDidMount() {
-    // al momento de initializa el Componente disparamos el Reducer...
-    // this.props.dispatch(userActions.getAll());
+    this.context.changeTitle('Listado de tests');
   }
 
   render() {
     const { user } = this.props;
     const { location } = this.props;
     return (
-      <MainLayout location={location} title="Test" button="/bye">
+      <div>
+        LISTA DE ALGO
+        <p>Link para editar</p>
         <Link to={`/test/${2}`}>Test/2</Link>
-      </MainLayout>
+      </div>
     );
   }
 }
@@ -27,7 +32,6 @@ function mapStateToProps(state) {
     user,
   };
 }
-
+Test.contextType = AppContext;
 const connectedTest = withRouter(connect(mapStateToProps)(Test));
-// const connectedLoginPage = withRouter(connect(mapStateToProps)(LoginPage))
 export { connectedTest as Test };

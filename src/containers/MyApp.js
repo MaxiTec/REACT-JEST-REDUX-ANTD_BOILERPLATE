@@ -1,69 +1,92 @@
 import React from 'react';
 import {
-  Switch, Route, withRouter, Link,
+  Switch, Route, withRouter, Redirect,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import { withRouter } from 'react-router-dom'
-// import { history } from '../store/store';
-import { Alert } from 'antd';
+import PropTypes from 'prop-types';
+import Alert from '../components/Alert';
+import AppContext from '../components/AppContext';
 import { alertActions } from '../actions/alert-actions';
+import { userActions } from '../actions/user-actions';
+// Podemos Llamar Las Paginas Asincronamente...
 import { PrivateRoute } from '../components/privateRoute';
 import { HomePage } from './Home';
 import { LoginPage } from './login';
 import { Test } from './Test';
-import CustomBreadCrumb from '../components/CustomBreadCrumb';
-// import { RegisterPage } from '../RegisterPage';
+import { TestEditar } from './TestEditar';
+import '../static/styles/index.css';
+import LoginLayout from '../components/InnerLayout/LoginLayout';
+
+const propTypes = {
+  clearMessage: PropTypes.func.isRequired,
+};
 class App extends React.Component {
   constructor(props) {
     super(props);
     console.log(props);
-    // console.log(history)
+    this.state = {
+      title: '...',
+      button: false,
+      changeTitle: (title) => {
+        this.setState({
+          title,
+        });
+      },
+      signOut: () => {
+        this.props.signOut()
+      },
+    };
     // const { dispatch } = this.props;
     // escuchamos siempre en cada cambio de pagina, y limpiamos las alertas.
-    // this.props.history.listen((location, action) => {
-    //     console.log(location,action)
-    //     dispatch(alertActions.clear());
-    // });
+    this.props.history.listen((location, action) => {
+      console.log(location, action);
+      this.setState({
+        title: '',
+      });
+      this.props.clearMessage()
+    });
   }
 
   render() {
-    const { location } = this.props;
     const { alert, login } = this.props;
     return (
-      <div className="container">
-        {alert.message && <Alert message={alert.message} type="warning" closable />}
+      <AppContext.Provider value={this.state}>
+        {alert.message && (
+          <Alert message={alert.message} type={alert.type} clearMessage={this.props.clearMessage} />
+        )}
         <Switch>
-          <PrivateRoute exact path="/" breadcrumbName="Home" component={HomePage} auth={login} />
-          <Route
-            path="/login"
-            render={props => <LoginPage breadcrumbName="login" {...props} />}
-            auth={login}
-          />
-          <Route exact path="/test" breadcrumbName="test" component={Test} auth={login} />
-          <Route
-            exact
-            path="/test/:id"
-            breadcrumbName="otro"
-            component={() => <div>/test/otro</div>}
-            auth={login}
-          />
-          {/* <Route path="/register" component={RegisterPage} /> */}
+          <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
+          <LoginLayout path="/login" component={LoginPage} />
+          <PrivateRoute exact path="/dashboard" component={HomePage} auth={login} />
+          <PrivateRoute exact path="/test" component={Test} auth={login} />
+          <PrivateRoute exact path="/test/:id" component={TestEditar} auth={login} />
         </Switch>
-      </div>
+      </AppContext.Provider>
     );
   }
 }
+App.propTypes = propTypes;
+App.contextType = AppContext;
 const mapStateToProps = (state) => {
-  const {
-    elements, message, login, alert,
-  } = state;
-  // const { loggedIn,user } = login;
+  const { elements, login, alert } = state;
   return {
     elements,
-    message,
     login,
     alert,
   };
 };
-const connectedApp = withRouter(connect(mapStateToProps)(App));
+const mapDispatchToProps = dispatch => ({
+  clearMessage() {
+    dispatch(alertActions.clear());
+  },
+  signOut() {
+    dispatch(userActions.logout());
+  },
+});
+const connectedApp = withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(App),
+);
 export { connectedApp as App };

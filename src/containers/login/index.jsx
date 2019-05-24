@@ -39,12 +39,13 @@ class LoginPage extends React.Component {
       .then((ele) => {
         console.log('Paso el Login');
       })
-      .catch((ele) => {
-        this.props.form.setFields({
-          username: {
-            errors: [new Error('forbid ha')],
-          },
-        });
+      .catch((error) => {
+        console.log(error)
+        // this.props.form.setFields({
+        //   username: {
+        //     errors: [new Error('forbid ha')],
+        //   },
+        // });
       });
   }
   // handleSubmit(e) {
