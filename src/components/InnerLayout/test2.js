@@ -12,6 +12,7 @@ const { SubMenu } = Menu;
 const {
   Header, Content, Sider, Footer,
 } = Layout;
+const rootSubmenuKeys = ['dashboard', 'test', 'sub3'];
 class MainLayout extends Component {
   constructor(props, context) {
     super(props);
@@ -56,11 +57,17 @@ class MainLayout extends Component {
     }
   }
 
-  onOpenChange(item) {
-    const newOpenKey = item[item.length - 1];
-    this.setState({
-      openKeys: [newOpenKey],
-    });
+  onOpenChange(openKeys) {
+    // const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
+    const latestOpenKey = openKeys[openKeys.length - 1 ]
+    if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      // Si no es ninguna de l raiz, abre los dos submenus
+      this.setState({ openKeys });
+    } else {
+      this.setState({
+        openKeys: latestOpenKey ? [latestOpenKey] : [],
+      });
+    }
   }
 
   render() {
@@ -179,6 +186,14 @@ class MainLayout extends Component {
                     </span>
                   </Link>
                 </Menu.Item>
+                <SubMenu key="Ventas_Otos" title="Submenu">
+                  <Menu.Item key="ventas_otros_1">Option 7</Menu.Item>
+                  <Menu.Item key="ventas_otros_2">Option 8</Menu.Item>
+                </SubMenu>
+                <SubMenu key="Ventas_Otoss" title="Submenu">
+                  <Menu.Item key="ventas_otross_1">Option 7</Menu.Item>
+                  <Menu.Item key="ventas_otross_2">Option 8</Menu.Item>
+                </SubMenu>
               </SubMenu>
               <SubMenu
                 key="test"
