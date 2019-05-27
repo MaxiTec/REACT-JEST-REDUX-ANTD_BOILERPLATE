@@ -8,11 +8,54 @@ import CustomBreadCrumb from '../CustomBreadCrumb';
 import css from './index.styl';
 import AppContext from '../AppContext';
 
+const MenuRoutes = [
+  {
+    key: 'dashboard',
+    path: '/dashboard',
+    name: 'Dashboard',
+    icon: 'icon-home',
+    children: [
+      { name: 'Global', path: '/dashboard' },
+      { name: 'Ventas', path: '/dashboard/ventas' },
+    ],
+  },
+  {
+    key: 'hoteles',
+    path: '/hoteles',
+    name: 'Hoteles',
+    icon: 'icon-user-plus',
+    children: [
+      { name: 'Listado de Hoteles', path: '/hoteles' },
+      { name: 'Nuevo Hotel', path: '/hoteles/add' },
+      {
+        name: 'Catálogos',
+        submenu: true,
+        children: [
+          { name: 'Servicios del Hoteles', path: '/hoteles/servicios' },
+          { name: 'Amenidades del Hoteles', path: '/hoteles/amenidades' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'test',
+    path: '/test',
+    name: 'Tests',
+    icon: 'icon-user-plus',
+    children: [
+      { name: 'Listado de Test', path: '/test' },
+      { name: 'Nuevo Test', path: '/test/add' },
+      { name: 'Categorías de Test', path: '/test/categorias' },
+      { name: 'paquetes', path: '/test/paquetes' },
+      { name: 'Tarifas', path: '/test/tarifas' },
+    ],
+  },
+];
 const { SubMenu } = Menu;
 const {
   Header, Content, Sider, Footer,
 } = Layout;
-const rootSubmenuKeys = ['dashboard', 'test', 'sub3'];
+const rootSubmenuKeys = MenuRoutes.map(ele => ele.key);
 class MainLayout extends Component {
   constructor(props, context) {
     super(props);
@@ -23,6 +66,7 @@ class MainLayout extends Component {
     this.toggle = this.toggle.bind(this);
     this.onOpenChange = this.onOpenChange.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
+    console.log(rootSubmenuKeys);
   }
 
   toggle() {
@@ -58,8 +102,9 @@ class MainLayout extends Component {
   }
 
   onOpenChange(openKeys) {
-    // const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    const latestOpenKey = openKeys[openKeys.length - 1 ]
+    console.log(openKeys);
+    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
+    // const latestOpenKey = openKeys[openKeys.length - 1];
     if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
       // Si no es ninguna de l raiz, abre los dos submenus
       this.setState({ openKeys });
@@ -88,7 +133,7 @@ class MainLayout extends Component {
                   overlay={() => (
                     <Menu>
                       <Menu.Item key="idioma">
-                        <button style={{ padding:0,background: 'none', border: '0px' }}>
+                        <button style={{ padding: 0, background: 'none', border: '0px' }}>
                           Cambiar Idioma
                         </button>
                       </Menu.Item>
@@ -98,7 +143,7 @@ class MainLayout extends Component {
                       <Menu.Divider />
                       <Menu.Item key="salir">
                         <button
-                          style={{ padding:0,background: 'none', border: '0px' }}
+                          style={{ padding: 0, background: 'none', border: '0px' }}
                           onClick={() => this.logout()}
                         >
                           Salir
@@ -160,7 +205,41 @@ class MainLayout extends Component {
               }}
               theme="dark"
             >
-              <SubMenu
+              {MenuRoutes.map(itemMenu => (
+                <SubMenu
+                  key={itemMenu.key}
+                  className={css.menu__submenu}
+                  title={(
+                    <span>
+                      <i className={`icon icon--md ${itemMenu.icon}`} />
+                      {itemMenu.name}
+                    </span>
+)}
+                >
+                  {itemMenu.children.map(item => {
+                    if(item.path){
+                      return (
+                        <Menu.Item key={item.path}>
+                            <Link to={item.path}>
+                              <span>
+                                <i className="icon icon-circle-o" />
+                                {item.name}
+                              </span>
+                            </Link>
+                          </Menu.Item>
+                      )
+                    }else{
+                      return (
+                        <SubMenu key="Ventas_Otoss" title="Submenu">
+                          <Menu.Item key="ventas_otross_1">Option 7</Menu.Item>
+                          <Menu.Item key="ventas_otross_2">Option 8</Menu.Item>
+                        </SubMenu>
+                      )
+                    }
+                  })}
+                </SubMenu>
+              ))}
+              {/* <SubMenu
                 key="dashboard"
                 className={css.menu__submenu}
                 title={(
@@ -235,7 +314,7 @@ class MainLayout extends Component {
                   <Icon type="desktop" />
                   <span>Option 2</span>
                 </Menu.Item>
-              </SubMenu>
+              </SubMenu> */}
             </Menu>
           </Sider>
           <Layout>

@@ -19,7 +19,7 @@ class Test extends React.Component {
       <div>
         LISTA DE ALGO
         <p>Link para editar</p>
-        <Link to={`/test/${2}`}>Test/2</Link>
+        <Link to={`/test/slug-de-test`}>Test/2</Link>
       </div>
     );
   }
