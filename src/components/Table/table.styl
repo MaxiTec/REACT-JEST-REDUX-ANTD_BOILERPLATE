@@ -1,0 +1,55 @@
+
+.custom_table
+  & :global(.rt-tbody)
+    font-size: 14px
+    overflow: visible!important
+  & :global(.rt-thead)
+    font-weight: 600;
+    line-height: 24px;
+    & :global(.rt-th)
+      padding: 5px 5px
+      display flex
+      justify-content center
+      align-items: center
+  & :global(.rt-td)
+    padding: 14px 5px
+    text-align: center
+    align-self: center
+  & :global(.pagination-bottom)
+    display flex
+    justify-content: space-between
+    align-items: center
+    padding: 1rem 1.5rem
+  & :global(.pagination-bottom .Table__pagination)
+    display flex
+    flex-direction: row
+    align-items: center
+    & :global(.Table__pageButton)
+      height: 32px;
+      width: 32px;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 4px;
+      background-color: #FFFFFF;
+      padding: 0
+      line-height: 32px
+      margin:0px 3px
+      cursor: pointer
+      font-size: 14px
+      &:global(:disabled)
+        background: rgba(lightgray,30%)
+        color: rgba(lightgray,80%)
+      &:global(.Table__pageButton--active)
+        background-color: #1890FF;
+        color:#fff
+        outline: none
+        line-height: 30px
+  & :global(.Table__prevPageWrapper)
+    color: #929595
+    height 32px
+    text-align: center
+    outline: none
+  & :global(.Table__nextPageWrapper)
+    color: #929595
+    height 32px
+    text-align: center
+    outline: none

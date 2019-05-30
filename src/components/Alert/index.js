@@ -10,7 +10,6 @@ class Alerta extends Component {
 
   handleClose() {
     this.setState({ visible: false });
-    // limpiamos las Props del Alerta....
     this.props.clearMessage();
   }
 

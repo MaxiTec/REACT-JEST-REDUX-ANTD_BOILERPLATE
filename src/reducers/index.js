@@ -1,8 +1,6 @@
 import storage from 'redux-persist/lib/storage';
 import { persistCombineReducers } from 'redux-persist';
 import login from './login-reducer';
-import elements from './elements-reducer';
-import message from './message-reducer';
 import alert from './alert-reducer';
 
 const config = {
@@ -12,9 +10,7 @@ const config = {
 };
 const rootReducer = persistCombineReducers(config, {
   login,
-  elements,
   alert,
-  message,
 });
 
 export default rootReducer;

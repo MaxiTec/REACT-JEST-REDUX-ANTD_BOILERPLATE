@@ -28,7 +28,7 @@
 
 [class^="icon-"]:before,
 [class*=" icon-"]:before {
-  font-size: 16px;
+  font-size: 14px;
   margin-right: 5px;
   vertical-align: middle;
   font-family: "vcm-font" !important;
@@ -41,11 +41,14 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.icon--md{
+.icon--md:before{
   font-size: 16px;
 }
-.icon--lg{
+.icon--lg:before{
   font-size: 18px;
+}
+.icon--xl:before{
+  font-size: 20px;
 }
 .icon-bed:before {
   content: "\61";
@@ -136,8 +139,4 @@
 }
 .icon-circle-o:before {
   content: "\44";
-}
-/* Custom css Antd-Menu */
-.ant-menu-submenu-selected .ant-menu-submenu-title{
-  border-left:2px solid #00a65a!important;
 }

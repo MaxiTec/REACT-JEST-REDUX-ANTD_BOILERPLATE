@@ -7,7 +7,7 @@ import { LocaleProvider } from 'antd';
 // Nota: En produccion Habilitar El idioma en Webpack
 import es_Es from 'antd/lib/locale-provider/es_Es';
 import moment from 'moment';
-import { App } from './containers/MyApp';
+import { App } from './containers/App';
 import store, { persistor } from './store/store';
 import { history } from './store/history';
 import 'moment/locale/es';

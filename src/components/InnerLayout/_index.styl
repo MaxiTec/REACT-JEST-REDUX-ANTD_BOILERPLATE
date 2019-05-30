@@ -1,6 +1,4 @@
-$primaryColor=#00A65A
-$menuColor=#222D32
-$selectedColor=#1A2226
+@import '../../styles/index.styl'
 .header
   background-color: $primaryColor
   padding: 0
@@ -47,7 +45,24 @@ $selectedColor=#1A2226
   &__PageHeader
     background-color: #ECF0F5
     box-shadow: 0 2px 14px 0 rgba(0,0,0,0.3)
+    @media (min-width: 320px) and (max-width: 480px)
+      & :global(.ant-page-header-title-view)
+        display: block
+        text-align: center
+      & :global(.ant-page-header-title-view-extra)
+        position: relative
+        top:auto
+        right: auto
+      & :global(.ant-page-header-title-view-extra .ant-breadcrumb)
+        margin-top:10px
 .menu
   &__submenu
     &:hover
       background: $selectedColor
+.custom__menu
+  & :global(.ant-menu-submenu-selected .ant-menu-submenu-title)
+    border-left:3px solid #00a65a!important;
+  // @media (min-width: 320px) and (max-width: 480px)
+  //   & :global(.ant-page-header-title-view)
+  //     display: block
+  //     text-align: center

@@ -1,16 +1,18 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import { Breadcrumb,Icon } from 'antd';
-const breadcrumbNameMap = {
-  '/apps': 'Application List',
-  '/apps/1': 'Application1',
-  '/apps/2': 'Application2',
-  '/apps/1/detail': 'Detail',
-  '/apps/2/detail': 'Detail',
-};
-const CustomBreadCrumb = (props) => {
-  const pathSnippets = props.location.pathname.split('/').filter(i => i);
-  console.log()
+import {MenuRoutes} from '../InnerLayout/menu'
+let breadcrumbNameMap={}
+MenuRoutes.forEach(element => {
+  element.children.forEach(test=>{
+    if(test.path!=undefined){
+      breadcrumbNameMap[test.path]=test.name;
+    }
+  })
+});
+let CustomBreadCrumb = (props) => {
+  // Removemos el item de editar solo para el Breadcrumb
+  const pathSnippets = props.location.pathname.replace("editar", "").split('/').filter(i => i);
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
       const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
       if(pathSnippets.length==1 && url=='/dashboard'){
@@ -18,7 +20,7 @@ const CustomBreadCrumb = (props) => {
       }else{
         return (
             <Breadcrumb.Item key={url}>
-              {pathSnippets.length -1 == index ? <span>{_}</span> : <Link to={url}>{_}</Link>}
+              {pathSnippets.length -1 == index ? <span>{(breadcrumbNameMap[url]!=undefined)?breadcrumbNameMap[url]:props.title}</span> : <Link to={url}>{breadcrumbNameMap[url]}</Link>}
             </Breadcrumb.Item>
         );
       }
@@ -40,4 +42,4 @@ const CustomBreadCrumb = (props) => {
   );
 }
  
-export default CustomBreadCrumb;
+export default CustomBreadCrumb
